@@ -1,3 +1,9 @@
+/**
+require('util.LoAN.inject');
+
+This module will attempt to load the LoAN tampermonkey code each time you have a global reset.
+*/
+
 global.injectLoAN = function(){
     var output = `<SCRIPT>
 if(!window.LoANInjected){
