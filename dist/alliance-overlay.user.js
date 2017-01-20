@@ -467,6 +467,7 @@ function declareLoAN(){
 /* Entry point */
 window.executeLoAN = function(){
     if(!document.LoANDeclared)declareLoAN();
+    window.ensureAllianceData();
     $(document).ready(() => {
         ScreepsAdapter.onViewChange((view) => {
             if (view === "worldMapEntered") {
