@@ -2,11 +2,19 @@
 
 // ==UserScript==
 // @name         Screeps alliance overlay
+// @author esyrok, stybbe and SemperRabbit
 // @namespace    https://screeps.com/
 // @include      https://screeps.com/a/
 // @run-at       document-ready
 // @grant none
 // ==/UserScript==
+
+/*
+Special thanks to esyrok for the original code, stybbe for the chrome plugin leaderboard format,
+tedivm, ags131 and akusnayesa for helping me with the LoAN CORS in python and ags131 again for
+showing me the wonders of XMLHttpRequest.
+*/
+
 function declareLoAN(){
     window.LoANDeclared = true;
     window.DomHelper = window.DomHelper || {};
