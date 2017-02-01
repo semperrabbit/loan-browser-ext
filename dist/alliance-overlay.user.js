@@ -387,9 +387,9 @@ function declareLoAN(){
                             let str = "";
                             if(allianceName !== "") {
                                 if(allianceLogo !== "") {
-                                    str="<td class='alliance-leaderboard'><a href='http://www.leagueofautomatednations.com/a/"+allianceKey+"'><img src='"+allianceLogo+"' height='16' width='16'>"+allianceKey+"</a></td>";
+                                    str="<td class='alliance-leaderboard'><a target='_blank' href='http://www.leagueofautomatednations.com/a/"+allianceKey+"'><img src='"+allianceLogo+"' height='16' width='16'>"+allianceKey+"</a></td>";
                                 } else {
-                                    str="<td class='alliance-leaderboard'><a href='http://www.leagueofautomatednations.com/a/"+allianceKey+"'>"+allianceKey+"</a></td>";
+                                    str="<td class='alliance-leaderboard'><a target='_blank' href='http://www.leagueofautomatednations.com/a/"+allianceKey+"'>"+allianceKey+"</a></td>";
                                 }
                             } else{
                                 str="<td class='alliance-leaderboard'></td>";
