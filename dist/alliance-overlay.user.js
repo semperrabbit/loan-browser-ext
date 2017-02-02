@@ -147,7 +147,11 @@ function declareLoAN(){
     };
 
     window.getAllianceColor = function(allianceKey) {
-        return randomColor(document.allianceData[allianceKey].name);
+        return randomColor({
+            luminosity: 'light',
+            hue: 'random',
+            seed: document.allianceData[allianceKey].name
+        });
     };
 
     /* query for alliance data from the LOAN site */
