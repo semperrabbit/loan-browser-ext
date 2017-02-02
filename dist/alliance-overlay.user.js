@@ -483,7 +483,7 @@ window.executeLoAN = function(){
                 src.lang='javascript';
                 src.innerHTML=result.responseText;
                 document.head.appendChild(src);
-                console.log('resp',result.responseText);
+                console.log('resp',xhr.responseText);
                 good({status: this.status, responseText: xhr.responseText});
             } else {
                 bad({ status: this.status, statusText: xhr.statusText });
