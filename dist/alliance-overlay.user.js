@@ -470,32 +470,30 @@ function declareLoAN(){
     };
 }
 /* Entry point */
+window.executeLoAN = function(){
+    if(!document.LoANDeclared)declareLoAN();
+    window.ensureAllianceData();
 
-new Promise(function(good, bad) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', "https://raw.githubusercontent.com/davidmerfield/randomColor/master/randomColor.js", true);
-    xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            if( !randomColor ){/* if this script tag has not already been added... */
+    new Promise(function(good, bad) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "https://raw.githubusercontent.com/davidmerfield/randomColor/master/randomColor.js", true);
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
                 let src=document.createElement('script');
                 src.lang='javascript';
                 src.innerHTML=result.responseText;
                 document.head.appendChild(src);
                 console.log('resp',result.responseText);
+                good({status: this.status, responseText: xhr.responseText});
+            } else {
+                bad({ status: this.status, statusText: xhr.statusText });
             }
-            good({status: this.status, responseText: xhr.responseText});
-        } else {
+        };
+        xhr.onerror = function () {
             bad({ status: this.status, statusText: xhr.statusText });
-        }
-    };
-    xhr.onerror = function () {
-        bad({ status: this.status, statusText: xhr.statusText });
-    };
-    xhr.send();
-}).then(function (result) {
-    window.executeLoAN = function(){
-        if(!document.LoANDeclared)declareLoAN();
-        window.ensureAllianceData();
+        };
+        xhr.send();
+    }).then(function (result) {
         $(document).ready(() => {
             ScreepsAdapter.onViewChange((view) => {
                 if (view === "worldMapEntered") {
@@ -508,7 +506,7 @@ new Promise(function(good, bad) {
                     });
                 }
             });
-            
+
             ScreepsAdapter.onHashChange((hash) => {
                 var match = hash.match(/#!\/(.+?)\//);
                 if (match && match.length > 1 && match[1] === "rank") {
@@ -518,6 +516,6 @@ new Promise(function(good, bad) {
                 }
             });
         });
-    };
-    executeLoAN();
-});
+    });
+};
+executeLoAN();
