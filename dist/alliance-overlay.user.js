@@ -137,8 +137,6 @@ function declareLoAN(){
         });
 
     })(ScreepsAdapter);
-    document.DEFAULT_COLORS = ["#0a72ff", "#08acfd", "#ff1902", "#0ffffb", "#827c01", "#fe07a6", "#fcff04", "#c602fe", "#fd8583", "#f2aafe", "#ff9801", "#1eff06", "#07a202", "#ff0258", "#adfe58", "#c1528c", "#17fd88", "#b36627", "#e1bf1b", "#7c6dc3", "#ffbc6f", "#da452f", "#fe26e5", "#8858fe", "#fe72d8", "#fe4c8d", "#f86506", "#a57fff", "#c18908", "#0582eb", "#41e43e", "#b6d304", "#fff793", "#ff884f", "#beba49", "#ba67bf", "#fff95f", "#d84357", "#ff8fc9", "#8efd02", "#d451fe", "#75c208", "#c25a47", "#8fa3ff", "#e586fe", "#d726b5", "#c8fe0a", "#f51231", "#d26e04", "#ee6f92", "#ff68f7", "#ffd564", "#d73697", "#bb9a41", "#ffb63b", "#ba93f6", "#ffe310", "#e29140", "#6172e4", "#b19b03", "#fe725f", "#f701ff", "#ff4b55", "#ff4f2b", ];
-
     window.loanBaseUrl = "http://www.leagueofautomatednations.com";
 
     window.getAllianceLogo = function(allianceKey) {
@@ -149,8 +147,11 @@ function declareLoAN(){
     };
 
     window.getAllianceColor = function(allianceKey) {
-        let keys = Object.keys(document.allianceData);
-        return document.DEFAULT_COLORS[keys.indexOf(allianceKey)];
+        return randomColor({
+            luminosity: 'light',
+            hue: 'random',
+            seed: document.allianceData[allianceKey].name
+        });
     };
 
     /* query for alliance data from the LOAN site */
@@ -476,28 +477,49 @@ function declareLoAN(){
 window.executeLoAN = function(){
     if(!document.LoANDeclared)declareLoAN();
     window.ensureAllianceData();
-    $(document).ready(() => {
-        ScreepsAdapter.onViewChange((view) => {
-            if (view === "worldMapEntered") {
-                ScreepsAdapter.$timeout(()=> {
-                    bindAllianceSetting();
-                    addAllianceToggle();
-                    addAllianceToInfoOverlay();
 
-                    addSectorAllianceOverlay();
-                });
+    new Promise(function(good, bad) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "https://raw.githubusercontent.com/davidmerfield/randomColor/master/randomColor.js", true);
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                let src=document.createElement('script');
+                src.lang='javascript';
+                src.innerHTML=xhr.responseText;
+                document.head.appendChild(src);
+                console.log('resp',xhr.responseText);
+                good({status: this.status, responseText: xhr.responseText});
+            } else {
+                bad({ status: this.status, statusText: xhr.statusText });
             }
-        });
+        };
+        xhr.onerror = function () {
+            bad({ status: this.status, statusText: xhr.statusText });
+        };
+        xhr.send();
+    }).then(function (result) {
+        $(document).ready(() => {
+            ScreepsAdapter.onViewChange((view) => {
+                if (view === "worldMapEntered") {
+                    ScreepsAdapter.$timeout(()=> {
+                        bindAllianceSetting();
+                        addAllianceToggle();
+                        addAllianceToInfoOverlay();
 
-        ScreepsAdapter.onHashChange((hash) => {
-            var match = hash.match(/#!\/(.+?)\//);
-            if (match && match.length > 1 && match[1] === "rank") {
-                let app = angular.element(document.body);
-                let search = app.injector().get("$location").search();
-                if (search.page) addAllianceColumnToLeaderboard();
-            }
+                        addSectorAllianceOverlay();
+                    });
+                }
+            });
+
+            ScreepsAdapter.onHashChange((hash) => {
+                var match = hash.match(/#!\/(.+?)\//);
+                if (match && match.length > 1 && match[1] === "rank") {
+                    let app = angular.element(document.body);
+                    let search = app.injector().get("$location").search();
+                    if (search.page) addAllianceColumnToLeaderboard();
+                }
+            });
         });
     });
 };
-
 executeLoAN();
