@@ -481,7 +481,7 @@ window.executeLoAN = function(){
             if (xhr.status >= 200 && xhr.status < 300) {
                 let src=document.createElement('script');
                 src.lang='javascript';
-                src.innerHTML=result.responseText;
+                src.innerHTML=xhr.responseText;
                 document.head.appendChild(src);
                 console.log('resp',xhr.responseText);
                 good({status: this.status, responseText: xhr.responseText});
