@@ -381,8 +381,8 @@ window.executeLoAN = function(){
         });
     };
     
-    injectScriptTag("https://raw.githubusercontent.com/davidmerfield/randomColor/master/randomColor.js", good, bad).then(
-    injectScriptTag("https://github.com/Esryok/screeps-browser-ext/raw/master/screeps-browser-core.js",  good, bad)).then(
+    injectScriptTag("https://raw.githubusercontent.com/davidmerfield/randomColor/master/randomColor.js").then(
+    injectScriptTag("https://github.com/Esryok/screeps-browser-ext/raw/master/screeps-browser-core.js")).then(
     function (result) {
         $(document).ready(() => {
             ScreepsAdapter.onViewChange((view) => {
