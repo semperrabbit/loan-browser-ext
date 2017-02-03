@@ -17,7 +17,7 @@ showing me the wonders of XMLHttpRequest.
 
 function declareLoAN(){
     window.LoANDeclared = true;
-    window.DomHelper = window.DomHelper || {};
+/*    window.DomHelper = window.DomHelper || {};
     (function(DomHelper){
         DomHelper.addStyle = function (css) {
             let head = document.head;
@@ -39,15 +39,15 @@ function declareLoAN(){
 
     window.ScreepsAdapter = window.ScreepsAdapter || {};
     (function(ScreepsAdapter) {
-        /* Listen for changes to the main screeps view */
-        /* Examples: roomEntered, scriptClick, consoleClick, worldMapEntered, simulationMainMenu, gameLobby */
+        //* Listen for changes to the main screeps view *
+        //* Examples: roomEntered, scriptClick, consoleClick, worldMapEntered, simulationMainMenu, gameLobby *
         ScreepsAdapter.onViewChange = function (callback) {
             let rootScope = angular.element(document.body).scope();
             if (!rootScope.viewChangeCallbacks) {
                 let tutorial = angular.element(document.body).injector().get("Tutorial");
                 console.log("Overriding Tutorial.trigger");
 
-                /* intercept events as they are passed to the tutorial popup manager */
+                //* intercept events as they are passed to the tutorial popup manager *
                 tutorial._trigger = tutorial.trigger;
                 tutorial.trigger = function(triggerName, unknownB) {
                     for (let i in rootScope.viewChangeCallbacks) {
@@ -80,7 +80,7 @@ function declareLoAN(){
             rootScope.hashChangeCallbacks.push(callback);
         };
 
-        /* aliases to angular services */
+        //* aliases to angular services *
         Object.defineProperty(ScreepsAdapter, "User", {
             get: function() {
                 delete this.User;
@@ -137,6 +137,7 @@ function declareLoAN(){
         });
 
     })(ScreepsAdapter);
+*/
     window.loanBaseUrl = "http://www.leagueofautomatednations.com";
 
     window.getAllianceLogo = function(allianceKey) {
@@ -478,26 +479,32 @@ window.executeLoAN = function(){
     if(!document.LoANDeclared)declareLoAN();
     window.ensureAllianceData();
 
-    new Promise(function(good, bad) {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', "https://raw.githubusercontent.com/davidmerfield/randomColor/master/randomColor.js", true);
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                let src=document.createElement('script');
-                src.lang='javascript';
-                src.innerHTML=xhr.responseText;
-                document.head.appendChild(src);
-                console.log('resp',xhr.responseText);
-                good({status: this.status, responseText: xhr.responseText});
-            } else {
+    function injectScriptTag(url){
+        return new Promise(function(good, bad){
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    let src=document.createElement('script');
+                    src.lang='javascript';
+                    src.innerHTML=xhr.responseText;
+                    document.head.appendChild(src);
+                    console.log('resp',xhr.responseText);
+                    good({status: this.status, responseText: xhr.responseText});
+                } else {
+                    bad({ status: this.status, statusText: xhr.statusText });
+                }
+            };
+            xhr.onerror = function () {
                 bad({ status: this.status, statusText: xhr.statusText });
-            }
-        };
-        xhr.onerror = function () {
-            bad({ status: this.status, statusText: xhr.statusText });
-        };
-        xhr.send();
-    }).then(function (result) {
+            };
+            xhr.send();
+        });
+    };
+    
+    injectScriptTag("https://raw.githubusercontent.com/davidmerfield/randomColor/master/randomColor.js", good, bad).then(
+    injectScriptTag("https://github.com/Esryok/screeps-browser-ext/raw/master/screeps-browser-core.js",  good, bad)).then(
+    function (result) {
         $(document).ready(() => {
             ScreepsAdapter.onViewChange((view) => {
                 if (view === "worldMapEntered") {
