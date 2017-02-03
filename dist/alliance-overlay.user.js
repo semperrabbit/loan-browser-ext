@@ -4,7 +4,7 @@
 // @name         Screeps alliance overlay
 // @author esyrok, stybbe and SemperRabbit
 // @namespace    https://screeps.com/
-// @include      https://screeps.com/a/
+// @include      https://screeps.com/a/*
 // @run-at       document-ready
 // @grant none
 // ==/UserScript==
