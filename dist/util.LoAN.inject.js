@@ -25,4 +25,7 @@ if(!window.LoANInjected){
     console.log(output.split('\n').join(';'));
 
 }
+
+global.forceInjectLoAN = ()=>{global.LoANInjected = false; injectLoAN();}
+
 injectLoAN();
