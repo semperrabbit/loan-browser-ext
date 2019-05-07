@@ -41,7 +41,7 @@ function declareLoAN(){
             return;
         }
         xhr=new XMLHttpRequest();
-        xhr.open('GET', "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D'http%3A%2F%2Fwww.leagueofautomatednations.com%2Falliances.js'&format=json", true);
+        xhr.open('GET', "https://www.leagueofautomatednations.com/alliances.js", true);
 //        xhr.setRequestHeader('Accept-Encoding', 'identity');
         xhr.onreadystatechange=function() {
             if(xhr.readyState===XMLHttpRequest.DONE&&xhr.status===200) {
